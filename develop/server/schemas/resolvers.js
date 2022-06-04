@@ -6,12 +6,53 @@ const resolvers = {
     Query: {
         me: async (_parent, _arg, context) => {
             if(context.user) {
-                return User.findOne({_id: context.user._id}).populate('savedBooks')
+                return User.findOne({_id: context.user._id})
+                //.populate? 
+                .populate('savedBooks')
             }
-            throw newAuthenticationError('You need to be logged in!');
+            throw new AuthenticationError('Login Please!');
         }
     },
     Mutation: {
+        addUser: async (_parent, {username,email,password})=>{
+            const user = await User.create(
+                {username, email, password})
+                const token = signToken(user)
+                return {token, user}
+        },
+        login: async (_parent, {email, password})=>{
+            const user = await User.findOne({email});
+            if(!user) {
+                throw new AuthenticationError('No user with that email')
+            }
+            const correctPassword = await user.isCorrectPass(password)
+            if(!correctPassword){
+                throw new AuthenticationError('incorrect password')
+            }
+            const token = signToken(user)
+            return {token, user};
+        },
+        saveBook: async (_parent, {book}, context) => {
+            const updatedUser = await User.findOneAndUpdate(
+                {_id: context.user._id},
+                {$addToSet:{savedBooks: book}},
+                {new: true, runValidators: true}
+            )
+            return updatedUser;
+        },
+    
+        removeBook: async (_parent,{bookId}, context )=> {
+            const updatedUser = await User.findOneAndUpdate(
+                {_id: context.user_id},
+                {$pull:{savedBooks:{bookId}}},
+                {new: true}
+            )
+            if (!updatedUser) {
+                throw new AuthenticationError('No book to delete')
+            }
+            return updatedUser
+        }
+
 
     }
 }
