@@ -5,6 +5,7 @@ const path = require('path');
 //require schemas, typeDefs & resolvers for Graphql
 const {typeDefs, resolvers} = require('./schemas')
 const db = require('./config/connection');
+const { authMiddleware } = require('./utils/auth');
 // routes for restful API
 //const routes = require('./routes');
 const app = express();
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3001;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: authMiddleware,
 })
 
 //extended from true (restful) to false (graphql)
@@ -31,6 +33,7 @@ if (process.env.NODE_ENV === 'production') {
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   //apply middleware
+  //apply 
   server.applyMiddleware({app})
 
   db.once('open', () => {
