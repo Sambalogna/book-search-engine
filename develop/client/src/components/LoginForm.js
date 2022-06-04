@@ -2,17 +2,17 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import {LOGIN_USER} from '../utils/mutations'
+import {useMutation} from '@apollo/client'
 //loginUser for restful api
 //import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
-  //LOGIN_USER mutation added for graphql
-  const [loginUser, {error, data}] = useMutation({LOGIN_USER})
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-
+  //LOGIN_USER mutation added for graphql
+  const [loginUser, error, data] = useMutation({LOGIN_USER})
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
@@ -34,9 +34,9 @@ const LoginForm = () => {
       const {data} = await loginUser({
         variables: {...userFormData}});
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
       
       // const { token, user } = await response.json();
