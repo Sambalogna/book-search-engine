@@ -2,14 +2,16 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import {LOGIN_USER} from '../utils/mutations'
+//loginUser for restful api
 //import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
+  //LOGIN_USER mutation added for graphql
+  const [loginUser, {error, data}] = useMutation({LOGIN_USER})
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [loginUser, {error, data}] = useMutation({LOGIN_USER})
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -27,7 +29,8 @@ const LoginForm = () => {
     }
 
     try {
-      //added login from LOGIN_USER
+      //api 
+      //const response = await loginUser(userFormData);
       const response = await loginUser({
         variables: {...userFormData}});
 
