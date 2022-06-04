@@ -22,15 +22,16 @@ const SavedBooks = () => {
         if (!token) {
           return false;
         }
+        const user = data?.me || {}
+        // const response = await getMe(token);
+        const {loading, data} = useQuery(getMe)
 
-        const response = await getMe(token);
+        // if (!response.ok) {
+        //   throw new Error('something went wrong!');
+        // }
 
-        if (!response.ok) {
-          throw new Error('something went wrong!');
-        }
-
-        const user = await response.json();
-        setUserData(user);
+        // const user = await response.json();
+        //setUserData(user);
       } catch (err) {
         console.error(err);
       }
