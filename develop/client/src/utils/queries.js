@@ -9,11 +9,11 @@ export const GET_ME = gql `
             password
             savedBooks {
                 bookId
-                bookTitle
-                bookAuthor
-                bookDescription
-                bookImage
-                bookLink
+                title
+                authors
+                description
+                image
+                link
             }
         }
     }

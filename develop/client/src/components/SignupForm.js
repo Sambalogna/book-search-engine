@@ -13,7 +13,7 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-  const [createUser, {error,data}] = useMutation(ADD_USER)
+  const [addUser] = useMutation(ADD_USER)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
@@ -32,7 +32,7 @@ const SignupForm = () => {
     try {
       //restful api
       // const response = await createUser(userFormData);
-      const {data} = await createUser({
+      const {data} = await addUser({
         variables: {...userFormData}});
 
       // if (!response.ok) {
@@ -42,7 +42,7 @@ const SignupForm = () => {
       // const { token, user } = await response.json();
       // console.log(user);
       // Auth.login(token);
-      Auth.login(data.createUser.token)
+      Auth.login(data.addUser.token)
     } catch (err) {
       console.error(err);
       setShowAlert(true);

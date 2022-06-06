@@ -25,7 +25,7 @@ const resolvers = {
             if(!user) {
                 throw new AuthenticationError('No user with that email')
             }
-            const correctPassword = await user.isCorrectPass(password)
+            const correctPassword = await user.isCorrectPassword(password)
             if(!correctPassword){
                 throw new AuthenticationError('incorrect password')
             }
@@ -33,12 +33,17 @@ const resolvers = {
             return {token, user};
         },
         saveBook: async (_parent, {book}, context) => {
+            console.log(context.user, book)
+            if(context.user){
             const updatedUser = await User.findOneAndUpdate(
                 {_id: context.user._id},
                 {$addToSet:{savedBooks: book}},
                 {new: true, runValidators: true}
             )
             return updatedUser;
+            }
+            throw new AuthenticationError('please login to save')
+            
         },
     
         removeBook: async (_parent,{bookId}, context )=> {

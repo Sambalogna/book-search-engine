@@ -12,7 +12,7 @@ const LoginForm = () => {
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   //LOGIN_USER mutation added for graphql
-  const [loginUser, error, data] = useMutation({LOGIN_USER})
+  const [login, {error}] = useMutation(LOGIN_USER)
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
@@ -31,7 +31,8 @@ const LoginForm = () => {
     try {
       //api 
       //const response = await loginUser(userFormData);
-      const {data} = await loginUser({
+
+      const {data} = await login({
         variables: {...userFormData}});
 
       // if (!response.ok) {
@@ -44,7 +45,7 @@ const LoginForm = () => {
 
 
       //Auth.login(token);
-      Auth.login(data.loginUser.token);
+      Auth.login(data.login.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
